@@ -9,12 +9,12 @@
 <script>
 export default {
   name: 'App',
-  created() {
-    const api = `${process.env.API_PATH}/API/${process.env.CUSTOMER_PATH}/products`;
-    this.$http.get(api).then((response) => {
-    console.log(response.data)
-})
-  },
+//   created() {
+//     const api = `${process.env.API_PATH}/API/${process.env.CUSTOMER_PATH}/admin/products`;
+//     this.$http.get(api).then((response) => {
+//     console.log(response.data)
+// })
+//   },
 }
 </script>
 
