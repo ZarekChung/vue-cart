@@ -10,7 +10,7 @@
         <th width="80">原價</th>
         <th width="80">售價</th>
         <th width="100">是否啟用</th>
-        <th width="80">編輯</th>
+        <th width="120">編輯</th>
       </thead>
       <tbody v-for="(item) in products" :key="item.id">
         <tr>
@@ -24,6 +24,7 @@
           </td>
           <td>
             <button class="btn btn-outline-primary btn-sm" @click="openModal(false,item)">編輯</button>
+            <button class="btn btn-outline-primary btn-sm" @click="deleteProduct(item.id)">刪除</button>
           </td>
         </tr>
       </tbody>
@@ -67,6 +68,19 @@ export default {
           (this.$refs.detail.isNew = false);
       }
       $("#productModal").modal("show");
+    },
+    deleteProduct(product_id) {
+      const api = `${process.env.API_PATH}/API/${
+        process.env.CUSTOMER_PATH
+      }/admin/product/${product_id}`;
+      const vm = this;
+      this.$http.delete(api).then(response => {
+        if (response.data.success) {
+          this.getProducts();
+        } else {
+          alert("無法刪除");
+        }
+      });
     }
   },
   created() {
