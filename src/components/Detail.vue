@@ -35,7 +35,13 @@
                   或 上傳圖片
                   <i class="fas fa-spinner fa-spin"></i>
                 </label>
-                <input type="file" id="customFile" class="form-control" ref="files">
+                <input
+                  type="file"
+                  id="customFile"
+                  class="form-control"
+                  ref="files"
+                  @change="uploadFile"
+                >
               </div>
               <img
                 img="https://images.unsplash.com/photo-1483985988355-763728e1935b?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=828346ed697837ce808cae68d3ddc3cf&auto=format&fit=crop&w=1350&q=80"
@@ -102,7 +108,6 @@
                 </div>
               </div>
               <hr>
-
               <div class="form-group">
                 <label for="description">產品描述</label>
                 <textarea
@@ -179,6 +184,29 @@ export default {
         $("#productModal").modal("hide");
         vm.$emit("reloadProductList");
       });
+    },
+    uploadFile() {
+      console.log("fileContent", this);
+      const uploadFile = this.$refs.files.files[0];
+      const vm = this;
+      const formData = new FormData();
+      formData.append("file-to-upload", uploadFile);
+
+      const api = `${process.env.API_PATH}/API/${
+        process.env.CUSTOMER_PATH
+      }/admin/upload`;
+      this.$http
+        .post(api, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
+        })
+        .then(response => {
+          console.log(response.data);
+          if (response.data.success) {
+            vm.$set(vm.tempProduct, "imageUrl", response.data.imageUrl);
+          }
+        });
     }
   },
   created() {}
