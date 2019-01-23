@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="text-right">
-      <button class="btn btn-primary">建立新的產品</button>
+      <button type="button" class="btn btn-primary" @click="openModal(true)">建立新的產品</button>
     </div>
     <table class="table mt-4">
       <thead>
@@ -18,38 +18,58 @@
           <td>{{item.title}}</td>
           <td class="text-right">{{item.origin_price}}</td>
           <td class="text-right">{{item.price}}</td>
-          <td><span v-if="item.is_enabled" class="text-success">啟用</span>
+          <td>
+            <span v-if="item.is_enabled" class="text-success">啟用</span>
             <span>未啟用</span>
           </td>
           <td>
-            <button class="btn btn-outline-primary btn-sm">編輯</button>
+            <button class="btn btn-outline-primary btn-sm" @click="openModal(false,item)">編輯</button>
           </td>
         </tr>
       </tbody>
     </table>
+    <!-- Modal -->
+    <Detail ref="detail" @reloadProductList="getProducts"></Detail>
   </div>
 </template>
 
 <script>
-  export default {
-    data() {
-      return {
-        products: [],
-      };
-    },
-    methods: {
-      getProducts() {
-        const api = `${process.env.API_PATH}/API/${process.env.CUSTOMER_PATH}/admin/products`;
-        const vm = this;
-        this.$http.get(api).then((response) => {
-          console.log(response.data.products);
-          this.products = response.data.products;
-        })
-      },
-    },
-    created() {
-      this.getProducts();
-    },
-  }
+import $ from "jquery";
+import Detail from "./Detail";
 
+export default {
+  data() {
+    return {
+      products: [],
+      isNew: false
+    };
+  },
+  components: {
+    Detail
+  },
+  methods: {
+    getProducts() {
+      const api = `${process.env.API_PATH}/API/${
+        process.env.CUSTOMER_PATH
+      }/admin/products`;
+      const vm = this;
+      this.$http.get(api).then(response => {
+        console.log(response.data.products);
+        this.products = response.data.products;
+      });
+    },
+    openModal(isNew, item) {
+      if (isNew) {
+        (this.$refs.detail.tempProduct = {}), (this.$refs.detail.isNew = true);
+      } else {
+        (this.$refs.detail.tempProduct = Object.assign({}, item)),
+          (this.$refs.detail.isNew = false);
+      }
+      $("#productModal").modal("show");
+    }
+  },
+  created() {
+    this.getProducts();
+  }
+};
 </script>
