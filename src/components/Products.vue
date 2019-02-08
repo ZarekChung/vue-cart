@@ -1,5 +1,7 @@
 <template>
   <div>
+    <loading :active.sync="isLoading"></loading>
+
     <div class="text-right">
       <button type="button" class="btn btn-primary" @click="openModal(true)">建立新的產品</button>
     </div>
@@ -35,56 +37,64 @@
 </template>
 
 <script>
-import $ from "jquery";
-import Detail from "./Detail";
+  import $ from "jquery";
+  import Detail from "./Detail";
 
-export default {
-  data() {
-    return {
-      products: [],
-      isNew: false
-    };
-  },
-  components: {
-    Detail
-  },
-  methods: {
-    getProducts() {
-      const api = `${process.env.API_PATH}/API/${
-        process.env.CUSTOMER_PATH
-      }/admin/products`;
-      const vm = this;
-      this.$http.get(api).then(response => {
-        console.log(response.data.products);
-        this.products = response.data.products;
-      });
+  export default {
+    data() {
+      return {
+        products: [],
+        isNew: false,
+        isLoading: false
+      };
     },
-    openModal(isNew, item) {
-      this.$refs.detail.$refs.files.value = "";
-      if (isNew) {
-        (this.$refs.detail.tempProduct = {}), (this.$refs.detail.isNew = true);
-      } else {
-        (this.$refs.detail.tempProduct = Object.assign({}, item)),
-          (this.$refs.detail.isNew = false);
-      }
-      $("#productModal").modal("show");
+    components: {
+      Detail
     },
-    deleteProduct(product_id) {
-      const api = `${process.env.API_PATH}/API/${
-        process.env.CUSTOMER_PATH
-      }/admin/product/${product_id}`;
-      const vm = this;
-      this.$http.delete(api).then(response => {
-        if (response.data.success) {
-          this.getProducts();
+    methods: {
+      getProducts() {
+        const api = `${process.env.API_PATH}/API/${
+          process.env.CUSTOMER_PATH
+        }/admin/products`;
+        const vm = this;
+        vm.isLoading = true;
+        this.$http.get(api).then(response => {
+          console.log(response.data.products);
+          this.products = response.data.products;
+          vm.isLoading = false;
+        });
+      },
+      openModal(isNew, item) {
+        this.$refs.detail.$refs.files.value = "";
+        if (isNew) {
+          (this.$refs.detail.tempProduct = {}), (this.$refs.detail.isNew = true);
         } else {
-          alert("無法刪除");
+          (this.$refs.detail.tempProduct = Object.assign({}, item)),
+          (this.$refs.detail.isNew = false);
         }
-      });
+        $("#productModal").modal("show");
+      },
+      deleteProduct(product_id) {
+        const api =
+          `${process.env.API_PATH}/API/${
+          process.env.CUSTOMER_PATH
+        }/admin/product/${product_id}`;
+        const vm = this;
+        if (confirm('確定要刪除嗎?')) {
+          this.$http.delete(api).then(response => {
+            if (response.data.success) {
+
+              this.getProducts();
+            } else {
+              alert("無法刪除");
+            }
+          });
+        }
+      }
+    },
+    created() {
+      this.getProducts();
     }
-  },
-  created() {
-    this.getProducts();
-  }
-};
+  };
+
 </script>

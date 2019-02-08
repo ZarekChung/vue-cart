@@ -33,7 +33,7 @@
               <div class="form-group">
                 <label for="customFile">
                   或 上傳圖片
-                  <i class="fas fa-spinner fa-spin"></i>
+               <i class="fas fa-sync fa-spin" v-if="status.fileUploading"></i>
                 </label>
                 <input
                   type="file"
@@ -159,7 +159,10 @@ export default {
   data() {
     return {
       tempProduct: {},
-      isNew: false
+      isNew: false,
+      status:{
+        fileUploading: false
+      }
     };
   },
   methods: {
@@ -195,6 +198,7 @@ export default {
       const api = `${process.env.API_PATH}/API/${
         process.env.CUSTOMER_PATH
       }/admin/upload`;
+      vm.status.fileUploading = true;
       this.$http
         .post(api, formData, {
           headers: {
@@ -202,6 +206,7 @@ export default {
           }
         })
         .then(response => {
+          vm.status.fileUploading = false;
           console.log(response.data);
           if (response.data.success) {
             vm.$set(vm.tempProduct, "imageUrl", response.data.imageUrl);

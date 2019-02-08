@@ -2,7 +2,9 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import axios from 'axios' //使用ajax的套件
-import VueAxios from 'vue-axios'//將套件轉為vue
+import VueAxios from 'vue-axios' //將套件轉為vue
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
 import 'bootstrap';
 
 
@@ -12,13 +14,16 @@ import router from './router'
 Vue.use(VueAxios, axios)
 Vue.config.productionTip = false
 axios.defaults.withCredentials = true;
+Vue.component('Loading', Loading);
 
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
-  components: { App },
+  components: {
+    App
+  },
   template: '<App/>'
 })
 
