@@ -31,6 +31,7 @@
         </tr>
       </tbody>
     </table>
+    <Pagination ref="pages"></Pagination>
     <!-- Modal -->
     <Detail ref="detail" @reloadProductList="getProducts"></Detail>
   </div>
@@ -39,29 +40,34 @@
 <script>
   import $ from "jquery";
   import Detail from "./Detail";
+  import Pagination from "./pages/Pagination";
+  
   
   export default {
     data() {
       return {
         products: [],
+        //pagination: {},
         isNew: false,
         isLoading: false
       };
     },
     components: {
-      Detail
+      Detail,
+      Pagination
     },
     methods: {
-      getProducts() {
+      getProducts(page = 1) {
         const api = `${process.env.API_PATH}/API/${
-            process.env.CUSTOMER_PATH
-          }/admin/products`;
+                      process.env.CUSTOMER_PATH
+                    }/admin/products?page=${page}`;
         const vm = this;
         vm.isLoading = true;
         this.$http.get(api).then(response => {
           console.log(response.data.products);
           this.products = response.data.products;
           vm.isLoading = false;
+          this.$refs.pages.pagination = response.data.pagination;
         });
       },
       openModal(isNew, item) {
@@ -77,8 +83,8 @@
       deleteProduct(product_id) {
         const api =
           `${process.env.API_PATH}/API/${
-            process.env.CUSTOMER_PATH
-          }/admin/product/${product_id}`;
+                      process.env.CUSTOMER_PATH
+                    }/admin/product/${product_id}`;
         const vm = this;
         if (confirm('確定要刪除嗎?')) {
           this.$http.delete(api).then(response => {
