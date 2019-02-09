@@ -1,7 +1,7 @@
 <template>
   <div>
     <loading :active.sync="isLoading"></loading>
-
+  
     <div class="text-right">
       <button type="button" class="btn btn-primary" @click="openModal(true)">建立新的產品</button>
     </div>
@@ -39,7 +39,7 @@
 <script>
   import $ from "jquery";
   import Detail from "./Detail";
-
+  
   export default {
     data() {
       return {
@@ -54,8 +54,8 @@
     methods: {
       getProducts() {
         const api = `${process.env.API_PATH}/API/${
-          process.env.CUSTOMER_PATH
-        }/admin/products`;
+            process.env.CUSTOMER_PATH
+          }/admin/products`;
         const vm = this;
         vm.isLoading = true;
         this.$http.get(api).then(response => {
@@ -77,16 +77,16 @@
       deleteProduct(product_id) {
         const api =
           `${process.env.API_PATH}/API/${
-          process.env.CUSTOMER_PATH
-        }/admin/product/${product_id}`;
+            process.env.CUSTOMER_PATH
+          }/admin/product/${product_id}`;
         const vm = this;
         if (confirm('確定要刪除嗎?')) {
           this.$http.delete(api).then(response => {
             if (response.data.success) {
-
               this.getProducts();
+              this.$bus.$emit('message:push', response.data.message, 'success');
             } else {
-              alert("無法刪除");
+              this.$bus.$emit('message:push', response.data.message, 'danger');
             }
           });
         }
@@ -96,5 +96,4 @@
       this.getProducts();
     }
   };
-
 </script>
