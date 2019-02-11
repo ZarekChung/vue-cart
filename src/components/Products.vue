@@ -1,7 +1,6 @@
 <template>
   <div>
     <loading :active.sync="isLoading"></loading>
-  
     <div class="text-right">
       <button type="button" class="btn btn-primary" @click="openModal(true)">建立新的產品</button>
     </div>
@@ -41,8 +40,6 @@
   import $ from "jquery";
   import Detail from "./Detail";
   import Pagination from "./pages/Pagination";
-  
-  
   export default {
     data() {
       return {
@@ -59,8 +56,8 @@
     methods: {
       getProducts(page = 1) {
         const api = `${process.env.API_PATH}/API/${
-                      process.env.CUSTOMER_PATH
-                    }/admin/products?page=${page}`;
+                        process.env.CUSTOMER_PATH
+                      }/admin/products?page=${page}`;
         const vm = this;
         vm.isLoading = true;
         this.$http.get(api).then(response => {
@@ -83,8 +80,8 @@
       deleteProduct(product_id) {
         const api =
           `${process.env.API_PATH}/API/${
-                      process.env.CUSTOMER_PATH
-                    }/admin/product/${product_id}`;
+                        process.env.CUSTOMER_PATH
+                      }/admin/product/${product_id}`;
         const vm = this;
         if (confirm('確定要刪除嗎?')) {
           this.$http.delete(api).then(response => {
