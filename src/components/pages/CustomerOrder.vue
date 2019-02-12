@@ -18,43 +18,64 @@
             </div>
           </div>
           <div class="card-footer d-flex">
-            <button type="button" class="btn btn-outline-secondary btn-sm">
-            <i class="fas fa-spinner fa-spin"></i>
-            查看更多
-          </button>
+            <button type="button" class="btn btn-outline-secondary btn-sm" @click="getProduct(item.id)">
+                  <i class="fas fa-spinner fa-spin" v-if="status.loadingItem === item.id"></i>
+                  查看更多
+                </button>
             <button type="button" class="btn btn-outline-danger btn-sm ml-auto">
-            <i class="fas fa-spinner fa-spin"></i>
-            加到購物車
-          </button>
+                  加到購物車
+                </button>
           </div>
         </div>
       </div>
     </div>
+    <!-- Modal -->
+    <CustomerDetail ref="customerDetail"></CustomerDetail>
   </div>
 </template>
 
 <script>
+  import $ from "jquery";
+  import CustomerDetail from "./CustomerDetail";
   export default {
     data() {
       return {
         products: [],
-        isLoading: false
+        product: {},
+        isLoading: false,
+        status: {
+          loadingItem: ''
+        }
       };
+    },
+    components: {
+      CustomerDetail
     },
     methods: {
       getProducts(page = 1) {
         const api = `${process.env.API_PATH}/API/${
-                          process.env.CUSTOMER_PATH
-                        }/products?page=${page}`;
+                                process.env.CUSTOMER_PATH
+                              }/products?page=${page}`;
         const vm = this;
         vm.isLoading = true;
         this.$http.get(api).then(response => {
           console.log(response.data.products);
           this.products = response.data.products;
           vm.isLoading = false;
-          //this.$refs.pages.pagination = response.data.pagination;
         });
       },
+      getProduct(id) {
+        const api = `${process.env.API_PATH}/API/${
+                                process.env.CUSTOMER_PATH
+                              }/product/${id}`;
+        const vm = this;
+        vm.status.loadingItem = id;
+        this.$http.get(api).then(response => {
+          this.$refs.customerDetail.product = response.data.product;
+          vm.status.loadingItem = '';
+          $("#productModal").modal("show");
+        });
+      }
     },
     created() {
       this.getProducts();
