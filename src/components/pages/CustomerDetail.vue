@@ -29,7 +29,7 @@
                     <div class="text-muted text-nowrap mr-3">
                         小計 <strong>{{ product.num * product.price  | currency}}</strong> 元
                     </div>
-                    <button type="button" class="btn btn-primary">
+                    <button type="button" class="btn btn-primary" @click="addToCart(product.id,product.num)">
                               <!-- <i class="fas fa-spinner fa-spin" ></i> -->
                               加到購物車
                             </button></div>
@@ -39,13 +39,21 @@
 </template>
 
 <script>
+ import $ from "jquery";
     export default {
         data() {
             return {
                 product: {},
             };
         },
-        methods: {},
+        methods: {
+            addToCart(id,qty){
+                console.log("test")
+                const vm = this;
+                vm.$emit("addCartList",id,qty);
+                 $("#productModal").modal("hide");
+            }
+        },
         created() {}
     };
 </script>

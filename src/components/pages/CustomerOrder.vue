@@ -19,24 +19,27 @@
           </div>
           <div class="card-footer d-flex">
             <button type="button" class="btn btn-outline-secondary btn-sm" @click="getProduct(item.id)">
-                  <i class="fas fa-spinner fa-spin" v-if="status.loadingItem === item.id"></i>
-                  查看更多
-                </button>
-            <button type="button" class="btn btn-outline-danger btn-sm ml-auto">
-                  加到購物車
-                </button>
+                      <i class="fas fa-spinner fa-spin" v-if="status.loadingItem === item.id"></i>
+                      查看更多
+                    </button>
+            <button type="button" class="btn btn-outline-danger btn-sm ml-auto" @click="addToCart(item.id)">
+                      加到購物車
+                    </button>
           </div>
         </div>
       </div>
     </div>
     <!-- Modal -->
-    <CustomerDetail ref="customerDetail"></CustomerDetail>
+    <CustomerDetail ref="customerDetail" @addCartList="addToCart"></CustomerDetail>
+    <CartList :CartList="catlist"></CartList>
   </div>
 </template>
 
 <script>
   import $ from "jquery";
   import CustomerDetail from "./CustomerDetail";
+  import CartList from "./CartList";
+
   export default {
     data() {
       return {
@@ -45,17 +48,19 @@
         isLoading: false,
         status: {
           loadingItem: ''
-        }
+        },
+        catlist:[]
       };
     },
     components: {
-      CustomerDetail
+      CustomerDetail,
+      CartList
     },
     methods: {
       getProducts(page = 1) {
         const api = `${process.env.API_PATH}/API/${
-                                process.env.CUSTOMER_PATH
-                              }/products?page=${page}`;
+                                    process.env.CUSTOMER_PATH
+                                  }/products?page=${page}`;
         const vm = this;
         vm.isLoading = true;
         this.$http.get(api).then(response => {
@@ -66,8 +71,8 @@
       },
       getProduct(id) {
         const api = `${process.env.API_PATH}/API/${
-                                process.env.CUSTOMER_PATH
-                              }/product/${id}`;
+                                    process.env.CUSTOMER_PATH
+                                  }/product/${id}`;
         const vm = this;
         vm.status.loadingItem = id;
         this.$http.get(api).then(response => {
@@ -75,10 +80,39 @@
           vm.status.loadingItem = '';
           $("#productModal").modal("show");
         });
+      },
+      addToCart(id, qty = 1) {
+        const api = `${process.env.API_PATH}/API/${
+                                    process.env.CUSTOMER_PATH
+                                  }/cart/`;
+        const vm = this;
+        vm.status.loadingItem = id;
+        const cart = {
+          product_id: id,
+          qty
+        };
+        this.$http.post(api, {
+          data: cart
+        }).then(response => {
+          vm.status.loadingItem = '';
+          console.log(response);
+          vm.getCart();
+        });
+      },
+      getCart() {
+        const api = `${process.env.API_PATH}/API/${
+                                    process.env.CUSTOMER_PATH
+                                  }/cart/`;
+        const vm = this;
+        this.$http.get(api).then(response => {
+          console.log(response);
+          vm.catlist = response.data.data;
+        });
       }
     },
     created() {
       this.getProducts();
+      this.getCart();
     }
   }
 </script>

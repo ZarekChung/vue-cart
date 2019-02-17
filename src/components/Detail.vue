@@ -7,8 +7,8 @@
             <span>新增產品</span>
           </h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
+                  <span aria-hidden="true">&times;</span>
+                </button>
         </div>
         <div class="modal-body">
           <div class="row">
@@ -19,9 +19,9 @@
               </div>
               <div class="form-group">
                 <label for="customFile">
-                      或 上傳圖片
-                   <i class="fas fa-sync fa-spin" v-if="status.fileUploading"></i>
-                    </label>
+                        或 上傳圖片
+                     <i class="fas fa-sync fa-spin" v-if="status.fileUploading"></i>
+                      </label>
                 <input type="file" id="customFile" class="form-control" ref="files" @change="uploadFile">
               </div>
               <img img="https://images.unsplash.com/photo-1483985988355-763728e1935b?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=828346ed697837ce808cae68d3ddc3cf&auto=format&fit=crop&w=1350&q=80" class="img-fluid" alt :src="tempProduct.imageUrl">
@@ -31,7 +31,6 @@
                 <label for="title">標題</label>
                 <input type="text" v-model="tempProduct.title" class="form-control" id="title" placeholder="請輸入標題">
               </div>
-  
               <div class="form-row">
                 <div class="form-group col-md-6">
                   <label for="category">分類</label>
@@ -42,7 +41,6 @@
                   <input type="unit" class="form-control" id="unit" placeholder="請輸入單位" v-model="tempProduct.unit">
                 </div>
               </div>
-  
               <div class="form-row">
                 <div class="form-group col-md-6">
                   <label for="origin_price">原價</label>
@@ -95,15 +93,14 @@
     methods: {
       updateProduct() {
         let api = `${process.env.API_PATH}/API/${
-            process.env.CUSTOMER_PATH
-          }/admin/product`;
+              process.env.CUSTOMER_PATH
+            }/admin/product`;
         let httpMethod = "post";
         const vm = this;
-  
         if (!vm.isNew) {
           api = `${process.env.API_PATH}/API/${
-              process.env.CUSTOMER_PATH
-            }/admin/product/${vm.tempProduct.id}`;
+                process.env.CUSTOMER_PATH
+              }/admin/product/${vm.tempProduct.id}`;
           httpMethod = "put";
         }
         this.$http[httpMethod](api, {
@@ -124,10 +121,9 @@
         const vm = this;
         const formData = new FormData();
         formData.append("file-to-upload", uploadFile);
-  
         const api = `${process.env.API_PATH}/API/${
-            process.env.CUSTOMER_PATH
-          }/admin/upload`;
+              process.env.CUSTOMER_PATH
+            }/admin/upload`;
         vm.status.fileUploading = true;
         this.$http
           .post(api, formData, {
