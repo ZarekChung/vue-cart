@@ -112,7 +112,7 @@
             this.$bus.$emit('message:push', response.data.message, 'success');
           }
           $("#productModal").modal("hide");
-          vm.$emit("reloadProductList");
+          vm.$emit("reload-productList");
         });
       },
       uploadFile() {

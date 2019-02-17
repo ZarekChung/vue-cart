@@ -32,7 +32,7 @@
     </table>
     <Pagination ref="pages"></Pagination>
     <!-- Modal -->
-    <Detail ref="detail" @reloadProductList="getProducts"></Detail>
+    <Detail ref="detail" @reload-productList="getProducts"></Detail>
   </div>
 </template>
 
