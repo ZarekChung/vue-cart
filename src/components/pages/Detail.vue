@@ -7,8 +7,8 @@
             <span>新增產品</span>
           </h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
+                <span aria-hidden="true">&times;</span>
+              </button>
         </div>
         <div class="modal-body">
           <div class="row">
@@ -19,9 +19,9 @@
               </div>
               <div class="form-group">
                 <label for="customFile">
-                        或 上傳圖片
-                     <i class="fas fa-sync fa-spin" v-if="status.fileUploading"></i>
-                      </label>
+                      或 上傳圖片
+                      <i class="fas fa-sync fa-spin" v-if="status.fileUploading"></i>
+                    </label>
                 <input type="file" id="customFile" class="form-control" ref="files" @change="uploadFile">
               </div>
               <img img="https://images.unsplash.com/photo-1483985988355-763728e1935b?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=828346ed697837ce808cae68d3ddc3cf&auto=format&fit=crop&w=1350&q=80" class="img-fluid" alt :src="tempProduct.imageUrl">
@@ -92,24 +92,20 @@
     },
     methods: {
       updateProduct() {
-        let api = `${process.env.API_PATH}/API/${
-              process.env.CUSTOMER_PATH
-            }/admin/product`;
+        let api = `${process.env.API_PATH}/API/${process.env.CUSTOMER_PATH}/admin/product`;
         let httpMethod = "post";
         const vm = this;
         if (!vm.isNew) {
-          api = `${process.env.API_PATH}/API/${
-                process.env.CUSTOMER_PATH
-              }/admin/product/${vm.tempProduct.id}`;
+          api = `${process.env.API_PATH}/API/${process.env.CUSTOMER_PATH}/admin/product/${vm.tempProduct.id}`;
           httpMethod = "put";
         }
         this.$http[httpMethod](api, {
           data: vm.tempProduct
         }).then(response => {
           if (!response.data.success) {
-            this.$bus.$emit('message:push', response.data.message, 'danger');
+            this.$bus.$emit("message:push", response.data.message, "danger");
           } else {
-            this.$bus.$emit('message:push', response.data.message, 'success');
+            this.$bus.$emit("message:push", response.data.message, "success");
           }
           $("#productModal").modal("hide");
           vm.$emit("reload-productList");
@@ -121,12 +117,9 @@
         const vm = this;
         const formData = new FormData();
         formData.append("file-to-upload", uploadFile);
-        const api = `${process.env.API_PATH}/API/${
-              process.env.CUSTOMER_PATH
-            }/admin/upload`;
+        const api = `${process.env.API_PATH}/API/${process.env.CUSTOMER_PATH}/admin/upload`;
         vm.status.fileUploading = true;
-        this.$http
-          .post(api, formData, {
+        this.$http.post(api, formData, {
             headers: {
               "Content-Type": "multipart/form-data"
             }
@@ -137,7 +130,7 @@
             if (response.data.success) {
               vm.$set(vm.tempProduct, "imageUrl", response.data.imageUrl);
             } else {
-              this.$bus.$emit('message:push', response.data.message, 'danger');
+              this.$bus.$emit("message:push", response.data.message, "danger");
             }
           });
       }

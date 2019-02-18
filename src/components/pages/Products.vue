@@ -39,7 +39,7 @@
 <script>
   import $ from "jquery";
   import Detail from "./Detail";
-  import Pagination from "./pages/Pagination";
+  import Pagination from "./Pagination";
   export default {
     data() {
       return {
@@ -55,9 +55,7 @@
     },
     methods: {
       getProducts(page = 1) {
-        const api = `${process.env.API_PATH}/API/${
-                        process.env.CUSTOMER_PATH
-                      }/admin/products?page=${page}`;
+        const api = `${process.env.API_PATH}/API/${process.env.CUSTOMER_PATH}/admin/products?page=${page}`;
         const vm = this;
         vm.isLoading = true;
         this.$http.get(api).then(response => {
@@ -78,18 +76,15 @@
         $("#productModal").modal("show");
       },
       deleteProduct(product_id) {
-        const api =
-          `${process.env.API_PATH}/API/${
-                        process.env.CUSTOMER_PATH
-                      }/admin/product/${product_id}`;
+        const api = `${process.env.API_PATH}/API/${process.env.CUSTOMER_PATH}/admin/product/${product_id}`;
         const vm = this;
-        if (confirm('確定要刪除嗎?')) {
+        if (confirm("確定要刪除嗎?")) {
           this.$http.delete(api).then(response => {
             if (response.data.success) {
               this.getProducts();
-              this.$bus.$emit('message:push', response.data.message, 'success');
+              this.$bus.$emit("message:push", response.data.message, "success");
             } else {
-              this.$bus.$emit('message:push', response.data.message, 'danger');
+              this.$bus.$emit("message:push", response.data.message, "danger");
             }
           });
         }
