@@ -64,8 +64,9 @@
                     } else {
                         this.$bus.$emit("message:push", response.data.message, "success");
                     }
+                     vm.$emit("reload-coupons");
                 });
-                vm.$emit("reload-coupons");
+               
             },
         }
     }

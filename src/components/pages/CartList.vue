@@ -12,18 +12,11 @@
                     <tr v-for="item in CartList.carts" :key="item.id">
                         <td>
                             <button type="button" class="btn btn-outline-danger btn-sm" @click="removeCartItem(item.id)">
-                                      <i class="far fa-trash-alt"></i>
-                                    </button>
+                             <i class="far fa-trash-alt"></i></button>
                         </td>
-                        <td>
-                            {{item.product.title}}
-                        </td>
-                        <td>
-                            {{item.qty}}/{{item.unit}}
-                        </td>
-                        <td>
-                            {{item.total | currency}}
-                        </td>
+                        <td>{{item.product.title}}</td>
+                        <td>{{item.qty}}/{{item.unit}}</td>
+                        <td>{{item.total | currency}}</td>
                     </tr>
                 </tbody>
                 <tfoot>
@@ -33,6 +26,14 @@
                     </tr>
                 </tfoot>
             </table>
+            <div class="input-group mb-3 input-group-sm">
+                <input type="text" class="form-control" v-model="coupon_code" placeholder="請輸入優惠碼">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button" @click="addCouponCode">
+                          套用優惠碼
+                        </button>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -40,7 +41,9 @@
 <script>
     export default {
         data() {
-            return {}
+            return {
+                coupon_code: ''
+            }
         },
         props: ['CartList'],
         methods: {
@@ -50,11 +53,23 @@
                 this.$http.delete(api).then(response => {
                     vm.$emit("reload-cart");
                 });
+            },
+            addCouponCode() {
+                const api = `${process.env.API_PATH}/API/${process.env.CUSTOMER_PATH}/coupon`;
+                const vm = this;
+                const coupon = {
+                    code: vm.coupon_code,
+                };
+                this.$http.post(api, { data: coupon}).then(response => {
+                    if (!response.data.success) {
+                        this.$bus.$emit("message:push", response.data.message, "danger");
+                    } else {
+                        this.$bus.$emit("message:push", response.data.message, "success");
+                    }
+                    vm.$emit("reload-cart");
+                });
             }
         },
-        created() {
-            console.log("CartList")
-        }
     }
 </script>
 
