@@ -99,6 +99,5 @@
         background-clip: padding-box;
         border: 1px solid #ced4da;
         border-radius: 0.25rem;
-        -webkit-transition: borde
     }
 </style>
