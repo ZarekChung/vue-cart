@@ -1,7 +1,7 @@
 <template>
     <div>
         <!-- <loading :active.sync="isLoading"></loading> -->
-        <form>
+        <form @submit.prevent="updateCoupons">
             <div class="form-row">
                 <div class="form-group col-md-4">
                     <label for="inputName">優惠券名稱</label>
@@ -13,7 +13,7 @@
                 </div>
                 <div class="form-group col-md-4">
                     <label for="inputDueDate">到期日</label>
-                    <input type="text" class="form-control" id="inputDueDate" v-model="tempCoupons.due_date">
+                    <datepicker :format="customFormatter" v-model="tempCoupons.due_date" id="inputDueDate" name="inputDueDate"></datepicker>
                 </div>
             </div>
             <div class="form-row">
@@ -29,7 +29,7 @@
                         </div>
                     </div>
                     <div class="col-auto my-1">
-                        <button type="submit" class="btn btn-primary" @click="updateCoupons">新增</button>
+                        <button type="submit" class="btn btn-primary">新增</button>
                     </div>
                 </div>
             </div>
@@ -40,12 +40,19 @@
 </template>
 
 <script>
+    import Datepicker from 'vuejs-datepicker'
+    import $ from "jquery";
+    import moment from "moment";
     export default {
         data() {
             return {
                 tempCoupons: {},
                 isNew: false,
+                tempDate: ''
             };
+        },
+        components: {
+            Datepicker
         },
         methods: {
             updateCoupons() {
@@ -56,6 +63,8 @@
                 //     api = `${process.env.API_PATH}/API/${process.env.CUSTOMER_PATH}/admin/coupon/${vm.tempProduct.id}`;
                 //     httpMethod = "put";
                 // }
+                vm.tempCoupons.due_date = this.tempDate;
+                console.log("vm.tempCoupons.due_date", vm.tempCoupons.due_date);
                 this.$http[httpMethod](api, {
                     data: vm.tempCoupons
                 }).then(response => {
@@ -64,11 +73,32 @@
                     } else {
                         this.$bus.$emit("message:push", response.data.message, "success");
                     }
-                     vm.$emit("reload-coupons");
+                    vm.$emit("reload-coupons");
                 });
-               
             },
-        }
+            customFormatter(date) {
+                var newDate = moment(date).format('YYYY-MM-DD');
+                this.tempDate = Date.parse(moment(date).format('MMM d YYYY'));
+                return newDate;
+            }
+        },
+        created() {}
     }
 </script>
-
+<style>
+    #inputDueDate {
+        display: block;
+        width: 100%;
+        height: calc(2.25rem + 2px);
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #495057;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+        -webkit-transition: borde
+    }
+</style>

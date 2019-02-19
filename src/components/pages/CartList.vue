@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <div>
+    <div class="my-5 row justify-content-center">
+        <div class="my-5 row justify-content-center">
             <table class="table">
                 <thead>
                     <th></th>
@@ -12,9 +12,13 @@
                     <tr v-for="item in CartList.carts" :key="item.id">
                         <td>
                             <button type="button" class="btn btn-outline-danger btn-sm" @click="removeCartItem(item.id)">
-                             <i class="far fa-trash-alt"></i></button>
+                                             <i class="far fa-trash-alt"></i></button>
                         </td>
-                        <td>{{item.product.title}}</td>
+                        <td>{{item.product.title}}
+                            <div class="text-success" v-if="item.coupon">
+                                已套用優惠券
+                            </div>
+                        </td>
                         <td>{{item.qty}}/{{item.unit}}</td>
                         <td>{{item.total | currency}}</td>
                     </tr>
@@ -22,7 +26,11 @@
                 <tfoot>
                     <tr>
                         <td colspan="3" class="text-right">總計</td>
-                        <td>{{ CartList.final_total | currency}}</td>
+                        <td>{{ CartList.total | currency}}</td>
+                    </tr>
+                    <tr v-if="CartList.final_total !== CartList.total">
+                        <td colspan="3" class="text-right text-success">折扣價</td>
+                        <td class="text-success">{{ CartList.final_total | currency }}</td>
                     </tr>
                 </tfoot>
             </table>
@@ -30,8 +38,7 @@
                 <input type="text" class="form-control" v-model="coupon_code" placeholder="請輸入優惠碼">
                 <div class="input-group-append">
                     <button class="btn btn-outline-secondary" type="button" @click="addCouponCode">
-                          套用優惠碼
-                        </button>
+                    套用優惠碼</button>
                 </div>
             </div>
         </div>
@@ -60,7 +67,9 @@
                 const coupon = {
                     code: vm.coupon_code,
                 };
-                this.$http.post(api, { data: coupon}).then(response => {
+                this.$http.post(api, {
+                    data: coupon
+                }).then(response => {
                     if (!response.data.success) {
                         this.$bus.$emit("message:push", response.data.message, "danger");
                     } else {
@@ -69,7 +78,7 @@
                     vm.$emit("reload-cart");
                 });
             }
-        },
+        }
     }
 </script>
 

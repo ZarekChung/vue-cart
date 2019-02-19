@@ -16,14 +16,14 @@
           <td>{{item.title}}</td>
           <td>{{item.code}}</td>
           <td>{{item.percent}}</td>
-          <td>{{item.due_date}}</td>
+          <td>{{customFormatter(item.due_date)}}</td>
           <td>
             <span v-if="item.is_enabled" class="text-success">啟用</span>
             <span v-else>未啟用</span>
           </td>
           <td>
             <button class="btn btn-outline-primary btn-sm">編輯</button>
-            <button class="btn btn-outline-primary btn-sm">刪除</button>
+            <button class="btn btn-outline-primary btn-sm" @click="deleteCoupons(item.id)">刪除</button>
           </td>
         </tr>
       </tbody>
@@ -34,6 +34,8 @@
 
 <script>
   import CreateCoupons from "./CreateCoupons";
+  import $ from "jquery";
+  import moment from "moment";
   export default {
     data() {
       return {
@@ -56,6 +58,24 @@
           //this.$refs.pages.pagination = response.data.pagination;
         });
       },
+      deleteCoupons(coupon_id) {
+        const api = `${process.env.API_PATH}/API/${process.env.CUSTOMER_PATH}/admin/coupon/${coupon_id}`;
+        const vm = this;
+        if (confirm("確定要刪除嗎?")) {
+          this.$http.delete(api).then(response => {
+            if (response.data.success) {
+              this.getCoupons();
+              this.$bus.$emit("message:push", response.data.message, "success");
+            } else {
+              this.$bus.$emit("message:push", response.data.message, "danger");
+            }
+          });
+        }
+      },
+      customFormatter(date) {
+                var newDate = moment(date).format('YYYY-MM-DD');
+                return newDate;
+            }
     },
     created() {
       this.getCoupons();
