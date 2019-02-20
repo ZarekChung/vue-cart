@@ -13,7 +13,7 @@
                         <tr v-for="item in CartList.carts" :key="item.id">
                             <td>
                                 <button type="button" class="btn btn-outline-danger btn-sm" @click="removeCartItem(item.id)">
-                                                                         <i class="far fa-trash-alt"></i></button>
+                                                                             <i class="far fa-trash-alt"></i></button>
                             </td>
                             <td>{{item.product.title}}
                                 <div class="text-success" v-if="item.coupon">
@@ -24,7 +24,7 @@
                             <td>{{item.total | currency}}</td>
                         </tr>
                     </tbody>
-                    <tfoot v-if="CartList.carts[0]">
+                    <tfoot v-if="CartList.carts && CartList.carts.length >0">
                         <tr>
                             <td colspan="3" class="text-right">總計</td>
                             <td>{{ CartList.total | currency}}</td>
@@ -35,15 +35,14 @@
                         </tr>
                     </tfoot>
                 </table>
-                <div class="input-group mb-3 input-group-sm"  v-if="CartList.carts[0]">
+                <div class="input-group mb-3 input-group-sm" v-if="CartList.carts && CartList.carts.length >0">
                     <input type="text" class="form-control" v-model="coupon_code" placeholder="請輸入優惠碼">
                     <div class="input-group-append">
                         <button class="btn btn-outline-secondary" type="button" @click="addCouponCode">
-                                                套用優惠碼</button>
+                                                    套用優惠碼</button>
                     </div>
                 </div>
             </div>
-            
         </div>
     </div>
 </template>
@@ -78,7 +77,7 @@
                     } else {
                         this.$bus.$emit("message:push", response.data.message, "success");
                     }
-                      vm.$emit("reload-cart");
+                    vm.$emit("reload-cart");
                 });
             },
         }

@@ -1,6 +1,6 @@
 <template>
     <div class="row justify-content-center">
-        <div class="col-md-8" v-if="CartList.carts[0]" >
+        <div class="col-md-8">
                 <form @submit.prevent="createOrder">
                     <div class="form-group">
                         <label for="useremail">Email</label>
@@ -44,7 +44,7 @@ export default {
                         tel: '',
                         address: '',
                     }
-                }
+                },
             }
         },
         props: ['CartList'],
@@ -65,17 +65,12 @@ export default {
                             } else {
                                 this.$bus.$emit("message:push", response.data.message, "success");
                             }
-                             vm.$emit("reload-cart");
-                            // vm.$set(vm.form, "user", {
-                            //     name: '',
-                            //     email: '',
-                            //     tel: '',
-                            //     address: '',
-                            // });
+                            vm.$emit("go-payment", response.data.orderId);
+                            //vm.$router.push(`/pay_order/${response.data.orderId}`);
                         });
                     }
                 });
             }
-         }
+         },
 }
 </script>

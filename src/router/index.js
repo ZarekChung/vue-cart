@@ -6,6 +6,7 @@ import Dashboard from "@/components/Dashboard";
 import Products from "@/components/pages/Products";
 import CustomerOrder from "@/components/pages/CustomerOrder";
 import Coupons from "@/components/pages/Coupons";
+import PayOrder from "@/components/pages/PayOrder";
 
 Vue.use(Router);
 
@@ -58,6 +59,11 @@ export default new Router({
           path: "customer_Order",
           name: "CustomerOrder",
           component: CustomerOrder
+        },
+        {
+          path: "pay_order/:orderId",
+          name: "PayOrder",
+          component: PayOrder
         }
       ]
     }

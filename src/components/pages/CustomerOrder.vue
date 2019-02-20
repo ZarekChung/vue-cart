@@ -19,12 +19,12 @@
           </div>
           <div class="card-footer d-flex">
             <button type="button" class="btn btn-outline-secondary btn-sm" @click="getProduct(item.id)">
-                        <i class="fas fa-spinner fa-spin" v-if="status.loadingItem === item.id"></i>
-                        查看更多
-                      </button>
+                          <i class="fas fa-spinner fa-spin" v-if="status.loadingItem === item.id"></i>
+                          查看更多
+                        </button>
             <button type="button" class="btn btn-outline-danger btn-sm ml-auto" @click="addToCart(item.id)">
-                        加到購物車
-                      </button>
+                          加到購物車
+                        </button>
           </div>
         </div>
       </div>
@@ -32,8 +32,7 @@
     <!-- Modal -->
     <CustomerDetail ref="customerDetail" @addCartList="addToCart"></CustomerDetail>
     <CartList :CartList="catlist" @reload-cart="getCart"></CartList>
-    <CartForm :CartList="catlist" @reload-cart="getCart"></CartForm>
-
+    <CartForm :CartList="catlist" @go-payment="goPayment" v-if="catlist.carts && catlist.carts.length >0"></CartForm>
   </div>
 </template>
 
@@ -42,7 +41,6 @@
   import CustomerDetail from "./CustomerDetail";
   import CartList from "./CartList";
   import CartForm from "./CartForm";
-
   export default {
     data() {
       return {
@@ -52,7 +50,7 @@
         status: {
           loadingItem: ''
         },
-        catlist: []
+        catlist: {}
       };
     },
     components: {
@@ -66,7 +64,6 @@
         const vm = this;
         vm.isLoading = true;
         this.$http.get(api).then(response => {
-          console.log(response.data.products);
           this.products = response.data.products;
           vm.isLoading = false;
         });
@@ -93,7 +90,6 @@
           data: cart
         }).then(response => {
           vm.status.loadingItem = '';
-          console.log(response);
           vm.getCart();
         });
       },
@@ -102,10 +98,13 @@
         const vm = this;
         vm.isLoading = true;
         this.$http.get(api).then(response => {
-          console.log(response);
           vm.catlist = response.data.data;
           vm.isLoading = false;
         });
+      },
+      goPayment(orderID) {
+        const vm = this;
+        vm.$router.push(`/pay_order/${orderID}`);
       }
     },
     created() {
@@ -114,7 +113,3 @@
     }
   }
 </script>
-
-<style>
-
-</style>
