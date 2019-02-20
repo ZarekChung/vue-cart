@@ -32,6 +32,8 @@
     <!-- Modal -->
     <CustomerDetail ref="customerDetail" @addCartList="addToCart"></CustomerDetail>
     <CartList :CartList="catlist" @reload-cart="getCart"></CartList>
+    <CartForm :CartList="catlist" @reload-cart="getCart"></CartForm>
+
   </div>
 </template>
 
@@ -39,6 +41,8 @@
   import $ from "jquery";
   import CustomerDetail from "./CustomerDetail";
   import CartList from "./CartList";
+  import CartForm from "./CartForm";
+
   export default {
     data() {
       return {
@@ -53,7 +57,8 @@
     },
     components: {
       CustomerDetail,
-      CartList
+      CartList,
+      CartForm
     },
     methods: {
       getProducts(page = 1) {
