@@ -29,7 +29,7 @@
                         </div>
                     </div>
                     <div class="col-auto my-1">
-                        <button type="submit" class="btn btn-primary">新增</button>
+                        <button type="submit" class="btn btn-primary">{{text}}</button>
                     </div>
                 </div>
             </div>
@@ -47,23 +47,26 @@
         data() {
             return {
                 tempCoupons: {},
-                isNew: false,
-                tempDate: ''
+                isNew: true,
+                tempDate: '',
+                text: '新增'
             };
         },
         components: {
             Datepicker
         },
+        props: ['coupon'],
         methods: {
             updateCoupons() {
                 let api = `${process.env.API_PATH}/API/${process.env.CUSTOMER_PATH}/admin/coupon`;
                 let httpMethod = "post";
                 const vm = this;
-                // if (!vm.isNew) {
-                //     api = `${process.env.API_PATH}/API/${process.env.CUSTOMER_PATH}/admin/coupon/${vm.tempProduct.id}`;
-                //     httpMethod = "put";
-                // }
-                vm.tempCoupons.due_date = this.tempDate;
+                if (!vm.isNew) {
+                    api = `${process.env.API_PATH}/API/${process.env.CUSTOMER_PATH}/admin/coupon/${vm.tempCoupons.id}`;
+                    httpMethod = "put";
+                }else{
+                         vm.tempCoupons.due_date = this.tempDate;
+                }
                 console.log("vm.tempCoupons.due_date", vm.tempCoupons.due_date);
                 this.$http[httpMethod](api, {
                     data: vm.tempCoupons
@@ -73,6 +76,8 @@
                     } else {
                         this.$bus.$emit("message:push", response.data.message, "success");
                     }
+                    vm.tempCoupons = {};
+                    vm.text = '新增';
                     vm.$emit("reload-coupons");
                 });
             },

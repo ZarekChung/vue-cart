@@ -1,7 +1,7 @@
 <template>
   <div>
     <loading :active.sync="isLoading"></loading>
-    <CreateCoupons @reload-coupons="getCoupons"></CreateCoupons>
+    <CreateCoupons ref="createCoupons" @reload-coupons="getCoupons"></CreateCoupons>
     <table class="table mt-4">
       <thead>
         <th width="200">優惠券名稱</th>
@@ -22,7 +22,7 @@
             <span v-else>未啟用</span>
           </td>
           <td>
-            <button class="btn btn-outline-primary btn-sm">編輯</button>
+            <button class="btn btn-outline-primary btn-sm"  @click="updateCoupons(false,item)">編輯</button>
             <button class="btn btn-outline-primary btn-sm" @click="deleteCoupons(item.id)">刪除</button>
           </td>
         </tr>
@@ -71,6 +71,11 @@
             }
           });
         }
+      },
+      updateCoupons(isNew,item){
+        this.$refs.createCoupons.isNew  = isNew;
+        this.$refs.createCoupons.tempCoupons = Object.assign({}, item);
+        this.$refs.createCoupons.text ='送出';
       },
       customFormatter(date) {
                 var newDate = moment(date).format('YYYY-MM-DD');
