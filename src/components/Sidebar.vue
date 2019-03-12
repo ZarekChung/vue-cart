@@ -15,9 +15,9 @@
             </router-link>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="file"></span> 訂單列表
-            </a>
+              <router-link to="/admin/orders" class="nav-link">
+              <i class="fas fa-clipboard-list"></i> 訂單列表
+            </router-link>
           </li>
           <li class="nav-item">
             <router-link to="/admin/coupons" class="nav-link">
