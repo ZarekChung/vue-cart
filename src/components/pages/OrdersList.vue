@@ -3,24 +3,19 @@
         <loading :active.sync="isLoading"></loading>
         <table class="table mt-4">
             <thead>
-                <th width="120">訂單編號</th>
-                <th width="150">訂購人姓名</th>
+                <th width="100">訂單編號</th>
                 <th width="80">總金額</th>
                 <th width="80">付款狀態</th>
                 <th width="80">詳細資料</th>
             </thead>
             <tbody v-for="(item) in orders" :key="item.id">
                 <tr>
-                    <td>
-                        {{item.id}}
-                    </td>
-                    <td> {{item.user.name}}</td>
+                    <td>{{item.id}}</td>
                     <td>{{item.total | currency}}</td>
                     <td>{{item.is_paid}}</td>
                     <td>
                         <button class="btn btn-square btn-info" data-toggle="collapse" :data-target="`#${item.id}`">
-                                   Info
-                                </button>
+                        info</button>
                     </td>
                 </tr>
                 <tr>
@@ -28,34 +23,52 @@
                         <div :id="item.id" class="collapse" data-parent="#accordion">
                             <div id="accordion">
                                 <div class="form-row">
-                                    <div class="form-group col-md-4">
+                                    <div class="form-group col-md-2">
+                                        <label for="disabledTextInput">訂購人姓名</label>
+                                        <label class="form-control">{{item.user.name}}</label>
+                                    </div>
+                                    <div class="form-group col-md-5">
                                         <label for="disabledTextInput">地址</label>
-                                        <input type="text" id="disabledTextInput" class="form-control" :placeholder="item.user.address" disabled>
+                                        <label class="form-control">{{item.user.address}}</label>
                                     </div>
-                                    <div class="form-group col-md-4">
+                                    <div class="form-group col-md-3">
                                         <label for="disabledTextInput">Email</label>
-                                        <input type="text" id="disabledTextInput" class="form-control" :placeholder="item.user.email" disabled>
+                                        <label class="form-control">{{item.user.email}}</label>
                                     </div>
-                                    <div class="form-group col-md-4">
+                                    <div class="form-group col-md-2">
                                         <label for="disabledTextInput">tel</label>
-                                        <input type="text" id="disabledTextInput" class="form-control" :placeholder="item.user.tel" disabled>
+                                        <label class="form-control">{{item.user.tel}}</label>
                                     </div>
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group col-md-12">
                                         <label for="disabledTextInput">留言</label>
-                                        <textarea name="" id="" class="form-control" cols="30" rows="3" v-model="item.message" disabled></textarea>
+                                        <textarea name="" id="" class="form-control" cols="30" rows="3" v-model="item.message"></textarea>
                                     </div>
                                 </div>
+                                <form class="form-inline float-right">
+                                    <div class="form-group mb-2">
+                                        <label for="staticEmail2">總金額</label>
+                                    </div>
+                                    <div class="form-group mx-sm-3 mb-2">
+                                        <!-- <input type="text" id="staticEmail2" class="form-control" v-model="item.total" disabled> -->
+                                         <label class="form-control">{{item.total}}</label>
+                                         
+                                    </div>
+                                     <button class="btn btn-square btn-dark  mb-2">Edit</button>
+                                  
+                                </form>
                                 <table class="table table-bordered  ">
                                     <thead>
                                         <th width="150">品名</th>
                                         <th width="100">數量</th>
+                                        <th width="100">單價</th>
                                     </thead>
                                     <tbody>
-                                        <tr v-for="product in item.products" :key="product.id">
-                                            <td class="align-middle">{{ product.product_id }}</td>
-                                            <td class="align-middle">{{ product.qty }}</td>
+                                        <tr v-for="item in item.products" :key="item.id">
+                                            <td class="align-middle">{{ item.product.title }}</td>
+                                            <td class="align-middle">{{ item.qty }}/{{ item.product.unit }}</td>
+                                            <td class="align-middle">{{ item.product.price | currency}}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -83,7 +96,6 @@
                 const vm = this;
                 vm.isLoading = true;
                 this.$http.get(api).then(response => {
-                    console.log(response.data.orders);
                     vm.orders = response.data.orders;
                     vm.isLoading = false;
                 });
